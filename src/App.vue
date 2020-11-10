@@ -1,11 +1,9 @@
 <template>
   <div>app
     <hr/>
+    <di></di>
     <router-view/>
-    <router-link to="/money">money</router-link>
-    <router-link to="/labels">labels</router-link>
-    <router-link to="/statistics">statistics</router-link>
-  </div>
+    </div>
 
 </template>
 
@@ -31,3 +29,9 @@
   }
 }
 </style>
+<script>
+import Nav from '@/components/Nav'
+export default {
+  components: {Nav}
+}
+</script>
