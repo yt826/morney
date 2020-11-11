@@ -1,7 +1,6 @@
 <template>
-  <div>
-    Money.vue
-    <Nav />
+<div>
+   <Layout><p> Money.vue</p>  </Layout>
   </div>
 </template>
 
@@ -11,7 +10,5 @@ export default {
   name: 'Money',
 };
 </script>
-
 <style lang="scss" scoped>
-
 </style>
