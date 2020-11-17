@@ -10,6 +10,7 @@
 body{
   line-height: 1.5;
   font-family: $font-hei;
+  background: #f6f6f6;
 }
 
 </style>

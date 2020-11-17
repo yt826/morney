@@ -1,6 +1,6 @@
 <template>
 
-    <Layout >
+    <Layout class="wrapper">
       <div class="tags">
         <router-link class="tag" v-for="tag in tags" :key="tag.id"
           :to=" `/labels/edit/${tag.id}` ">
@@ -11,7 +11,7 @@
         </router-link>
       </div>
       <div class="createTag-wrapper">
-        <button class="createTag" @click="createTag">新增标签</button>
+        <Button class="createTag" @click.native="createTag">新增标签</Button>
       </div>
     </Layout>
 </template>
@@ -20,7 +20,10 @@ tagListModel.fetch()
 import Vue from 'vue'
 import {Component} from 'vue-property-decorator';
 import tagListModel from '@/models/tagListModel';
-@Component
+import Button from '@/components/Button.vue';
+@Component({
+  components: {Button}
+})
 export default class Labels extends Vue{
     tags=tagListModel.data;
     createTag(){
