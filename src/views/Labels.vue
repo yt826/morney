@@ -2,9 +2,9 @@
 
     <Layout >
       <ol class="tags">
-        <li v-for="tag in tags" :key="tag">
+        <li v-for="tag in tags" :key="tag.id">
           <span >
-            {{tag}}
+            {{tag.name}}
           </span>
           <Icons name="right"/>
         </li>
