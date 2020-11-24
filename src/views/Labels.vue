@@ -11,7 +11,8 @@
         </router-link>
       </div>
       <div class="createTag-wrapper">
-        <Button class="createTag" @click.native="createTag">新增标签</Button>
+        <Button class="createTag"
+                @click.native="createTag">新增标签</Button>
       </div>
     </Layout>
 </template>
@@ -25,7 +26,7 @@ import Button from '@/components/Button.vue';
   components: {Button}
 })
 export default class Labels extends Vue{
-    tags=tagListModel.data;
+    tags=window.tagList;
     createTag(){
     const name = window.prompt('请输入标签名');
     if(name){
@@ -43,6 +44,7 @@ export default class Labels extends Vue{
 
 <style lang="scss" scoped>
 .tags{
+  height: 80vh;
   background: white;
   font-size: 16px;
   padding-left: 16px;
@@ -69,7 +71,6 @@ export default class Labels extends Vue{
   &-wrapper{
     text-align: center;
     padding: 16px;
-    margin-top: 44-16px;
   }
 }
 </style>
