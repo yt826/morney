@@ -25,12 +25,13 @@ import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
 import FormItem from '@/components/Money/FormItem.vue';
 import Button from '@/components/Button.vue';
+import store from '@/store/index2';
 
 @Component({
   components: {Button, FormItem}
 })
 export default class EditLabel extends Vue {
-  tag?: Tag = window.findTag(this.$route.params.id);
+  tag?: Tag = store.findTag(this.$route.params.id);
 
   created() {
     if (!this.tag) {
@@ -40,13 +41,13 @@ export default class EditLabel extends Vue {
 
   updateTag(name: string) {
     if (this.tag) {
-      window.updateTag(this.tag.id, name);
+      store.updateTag(this.tag.id, name);
     }
   }
 
   remove() {
     if (this.tag) {
-      window.removeTag(this.tag.id);
+      store.removeTag(this.tag.id);
     }
 
   }
