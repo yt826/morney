@@ -1,24 +1,62 @@
-import tagListModel from '@/models/tagListModel';
+import createId from '@/lib/createId';
+const localStorageKeyName = 'tageList';
 
-export default{
-  tagList: tagListModel.fetch(),
+const tagStore = {
+ tagList: [] as Tag[],
+  fetchTag() {
+    this.tagList = JSON.parse(window.localStorage.getItem(localStorageKeyName) || '[]');
+    return this.tagList;
+  },
   findTag: function (id: string) {
     return this.tagList.filter(t => t.id === id)[0];
   },
-  createTag: (name: string) => {
-    const massage = tagListModel.create(name);
-    if (massage === 'fail') {
-      window.alert('你已经有一个标签了！');
-    } else if (massage === 'success') {
-      window.alert('创建成功！');
+  createTag (name: string) {
+    const names = this.tagList.map(item => item.name);
+    if (names.indexOf(name) >= 0) {
+      alert('重复了！')
+      return 'fail';
+
     }
-    return;
+    const id = createId().toString();
+    this.tagList.push({id,name: name});
+    this.saveTags();
+    alert('添加成功！')
+    return 'success'
   },
-  removeTag: (id: string) => {
-    const massage = tagListModel.remove(id);
-    return massage === 'success';
+  removeTag(id: string) {
+   let index=-1
+    for (let i = 0; i < this.tagList.length; i++) {
+      if (this.tagList[i].id === id) {
+        index = i;
+      }
+    }
+    if (index !==-1) {
+      this.tagList.splice(index, 1);
+      this.saveTags();
+      return 'success';
+    } else {
+      return 'not found';
+    }
   },
-  updateTag: (id: string, name: string) => {
-    return tagListModel.update(id, name);
+  updateTag (id: string, name: string){
+    const idList = this.tagList.map(item => item.id);
+    if (idList.indexOf(id) >= 0) {
+      const names = this.tagList.map(item => item.name);
+      if (names.indexOf(name) >= 0) {
+        return 'fail';
+      } else {
+        const tag = this.tagList.filter(item => item.id === id)[0];
+        tag.name = name;
+        this.saveTags();
+        return 'success';
+      }
+    } else {
+      return 'not found';
+    }
   },
+  saveTags() {
+    window.localStorage.setItem(localStorageKeyName, JSON.stringify(this.tagList));
+  }
 }
+tagStore.fetchTag();
+export default tagStore;
