@@ -16,7 +16,6 @@
       </div>
     </Layout>
 </template>
-tagListModel.fetch()
 <script lang="ts">
 import Vue from 'vue'
 import {Component} from 'vue-property-decorator';

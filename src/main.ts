@@ -13,6 +13,9 @@ Vue.component('Nav', Nav)
 Vue.component('Layout',Layout)
 Vue.component('Icons',Icons)
 window.tagList = tagListModel.fetch();
+window.findTag = (id:string)=>{
+  return window.tagList.filter(t => t.id === id)[0];
+};
 window.createTag = (name:string) =>{
   const massage = tagListModel.create(name);
   if(massage==='fail'){
@@ -23,6 +26,14 @@ window.createTag = (name:string) =>{
   }
   return
 }
+window.removeTag = (id:string) =>{
+  const massage = tagListModel.remove(id);
+  return massage === 'success';
+}
+window.updateTag = (id:string,name:string) =>{
+   return tagListModel.update(id, name);
+}
+
 new Vue({
   router,
   components: {Nav},

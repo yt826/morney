@@ -4,7 +4,8 @@
       <Icons @click.native='goBack' class="leftIcon" name="left"/>
       <span class="title">编辑标签</span>
       <div @click="reName"
-                class="rightIcon">修改</div>
+           class="rightIcon">修改
+      </div>
     </div>
     <div class="formItem-wrapper">
       <FormItem :value="tag.name"
@@ -22,7 +23,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
-import tagListModel from '@/models/tagListModel';
 import FormItem from '@/components/Money/FormItem.vue';
 import Button from '@/components/Button.vue';
 
@@ -30,33 +30,23 @@ import Button from '@/components/Button.vue';
   components: {Button, FormItem}
 })
 export default class EditLabel extends Vue {
-  tag?: { id: string, name: string } = undefined;
+  tag?: Tag = window.findTag(this.$route.params.id);
 
   created() {
-    const id = this.$route.params.id;
-    tagListModel.fetch();
-    const tags = tagListModel.data;
-    const tag = tags.filter(t => t.id === id)[0];
-    if (tag) {
-      this.tag = tag;
-    } else {
+    if (!this.tag) {
       this.$router.replace('/404');
     }
   }
 
   updateTag(name: string) {
     if (this.tag) {
-      tagListModel.update(this.tag.id, name);
+      window.updateTag(this.tag.id, name);
     }
   }
 
   remove() {
     if (this.tag) {
-      const massage = tagListModel.remove(this.tag.id);
-      if (massage === 'success') {
-        window.alert("删除成功")
-        this.$router.back()
-      }
+      window.removeTag(this.tag.id);
     }
 
   }
@@ -64,8 +54,9 @@ export default class EditLabel extends Vue {
   goBack() {
     this.$router.back();
   }
-  reName(){
-    window.alert('修改成功')
+
+  reName() {
+    window.alert('修改成功');
     this.$router.back();
   }
 }
