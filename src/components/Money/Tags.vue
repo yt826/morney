@@ -14,6 +14,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import {Component, Prop} from 'vue-property-decorator';
+import tagListModel from '@/models/tagListModel';
 
 
 @Component
@@ -32,14 +33,19 @@ export default class Tags extends Vue {
   }
 
   create() {
+    console.log('hello');
     const name = window.prompt('请输入标签名');
-
     if (name === '') {
       window.alert('标签名不能为空');
     } else if (this.dataSource && name) {
-      this.$emit('update:dataSource', [...this.dataSource, name]);
+      const massage = tagListModel.create(name);
+      if (massage === 'success'){
+        window.alert('添加成功！')
+      }
+      else if(massage === 'fail'){
+        window.alert('创建失败！')
+      }
     }
-
   }
 
 }
