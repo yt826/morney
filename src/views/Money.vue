@@ -49,7 +49,6 @@ export default class Money extends Vue {
 
   saveRecord() {
    this.$store.commit('createRecordList',this.record)
-    console.log(this.record);
   }
 }
 </script>
