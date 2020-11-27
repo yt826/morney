@@ -16,15 +16,12 @@ import {Component,Mixins} from 'vue-property-decorator';
 import TagHelper from '@/mixins/TagHelper';
 
 @Component({
-  computed: {
-    tagList() {
-      return (this as any).$store.state.tagList;
-    }
-  }
 })
 export default class Tags extends Mixins(TagHelper) {
   selectedTags: string[] = [];
-
+get tagList(){
+  return (this as any).$store.state.tagList;
+}
   toggle(tag: string) {
     const index = this.selectedTags.indexOf(tag);
     if (index >= 0) {

@@ -29,6 +29,7 @@ import Button from '@/components/Button.vue';
   components: {Button, FormItem},
 })
 export default class EditLabel extends Vue {
+  tagName = ''
   get tag() {
     return this.$store.state.currentTag
   }
@@ -40,10 +41,7 @@ export default class EditLabel extends Vue {
     }
   }
   updateTag(name: string) {
-    if (this.tag) {
-      const id = this.tag.id
-        this.$store.commit('updateTag', {id, name})
-    }
+    this.tagName=name
   }
 
   remove() {
@@ -59,7 +57,18 @@ export default class EditLabel extends Vue {
   }
 
   reName() {
-    window.alert('修改成功');
+        if (this.tag) {
+          const name = this.tagName
+          const id = this.tag.id
+            this.$store.commit('updateTag', {id,name})
+        }
+        const massage = this.$store.state.updateTagError
+        if(massage === 'success'){
+          alert('创建成功！')
+        }
+        else if (massage ==='duplicated'){
+          alert('标签名重复了！')
+        }
     this.$router.back();
   }
 }

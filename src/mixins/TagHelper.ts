@@ -7,7 +7,14 @@ export class TagHelper extends Vue{
     if (name) {
       (this as any).$store.commit('createTag', name)
     } else {
-      alert('标签名不能为空！');
+      alert('标签名不能为空！')
+    }
+    const massage = this.$store.state.creatTagError
+    if(massage === 'success'){
+      alert('创建成功！')
+    }
+    else if (massage ==='duplicated'){
+      alert('标签名重复了！')
     }
   }
 }
