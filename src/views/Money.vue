@@ -5,7 +5,7 @@
     <Tabs :data-source="recordTypeList" :value.sync="record.type"/>
     <div class="note">
     <FormItem field-name="备注" place-holder="在这里输入备注"
-           @update:value="onUpdateNotes"/>
+              :value.sync="record.notes"/>
     </div>
     <Tags :data-source.sync="tags"
           @update:value="onUpdateTags"/>
@@ -35,7 +35,7 @@ export default class Money extends Vue {
     tags: [], notes: '', type: '-', amount: 0
   };
 
-  onUpdateTags(value: string[]) {
+  onUpdateTags(value: Tag[]) {
     this.record.tags = value;
   }
 
@@ -49,6 +49,8 @@ export default class Money extends Vue {
 
   saveRecord() {
    this.$store.commit('createRecordList',this.record)
+    this.record.notes=''
+    this.record.tags=[]
   }
 }
 </script>

@@ -2,12 +2,9 @@
   <Layout>
     <Tabs :data-source="typeList" :value.sync="type"
           class-prefix="type"/>
-    <Tabs :data-source="intervalList" :value.sync="interval"
-          class-prefix="interval"
-    />
-    <ol>
+    <ol v-if="result.length>0">
       <li v-for="(group,index) in result" :key="index">
-        <h3 class='title'>{{ group.title }}</h3>
+        <h3 class='title'>{{ beautiful(group.title) }} <span>￥{{group.total}}</span></h3>
         <ol>
           <li v-for="item in group.items" :key="item.id"
               class="record">
@@ -18,6 +15,9 @@
         </ol>
       </li>
     </ol>
+    <div v-else class="noRecord">
+      当前没有记录
+    </div>
   </Layout>
 </template>
 
@@ -25,26 +25,24 @@
 import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
 import Tabs from '@/components/Tabs.vue';
-import intervalList from '@/constants/intervalList';
 import recordTypeList from '@/constants/recordeTypeList';
+import dayjs from 'dayjs';
+import clone from '@/lib/clone';
 
-class recordList {
-}
 
 @Component({
   components: {Tabs}
 })
 export default class Statistics extends Vue {
   tagString(tags: Tag[]) {
-    const array:string[] = []
-    if (tags.length!== 0){
-     for (let i = 0; i < tags.length;i++){
-       array.push(tags[i].name)
-     }
-     return array.join(',')
-    }
-    else{
-      return '无'
+    const array: string[] = [];
+    if (tags.length !== 0) {
+      for (let i = 0; i < tags.length; i++) {
+        array.push(tags[i].name);
+      }
+      return array.join(',');
+    } else {
+      return '无';
     }
   }
 
@@ -53,18 +51,52 @@ export default class Statistics extends Vue {
   }
 
   get result() {
+    type Result = {title:string,total?:number,items:RecordItem[]}[]
+
     const {recordList} = this;
-    type hashTableValue = {
-      title: string,
-      items: recordList[]
+
+
+    const newList = clone(recordList as RecordItem[])
+        .filter(r => r.type === this.type)
+        .sort((a, b) => dayjs(b.creatAt)
+            .valueOf() - dayjs(a.creatAt).valueOf());
+    if (newList.length === 0) {
+      return [];
     }
-    const hashTable: { [key: string]: hashTableValue } = {};
-    for (let i = 0; i < recordList.length; i++) {
-      const [date] = recordList[i].creatAt.split('T');
-      hashTable[date] = hashTable[date] || {title: date, items: []};
-      hashTable[date].items.push(recordList[i]);
+    const groupList:Result = [{
+      title: dayjs(newList[0].creatAt)
+          .format('YYYY-MM-DD'), items: [newList[0]]
+    }];
+    for (let i = 1; i < newList.length; i++) {
+      const current = newList[i];
+
+      const last = groupList[groupList.length - 1];
+      if (dayjs(last.title).isSame(dayjs(current.creatAt), 'day')) {
+        last.items.push(current);
+      } else {
+        groupList.push({title: dayjs(current.creatAt).format('YYYY-MM-DD'), items: [current]});
+      }
     }
-    return hashTable;
+    groupList.map(group=>{
+      group.total = group.items.reduce((sum,item)=>sum +=item.amount,0)
+    })
+    return groupList;
+  }
+
+  beautiful(string: string) {
+    const day = dayjs(string);
+    const now = dayjs();
+    if (day.isSame(now, 'day')) {
+      return '今天';
+    } else if (day.isSame(now.subtract(1, 'day'), 'day')) {
+      return '昨天';
+    } else if (day.isSame(now.subtract(2, 'day'), 'day')) {
+      return '前天';
+    } else if (day.isSame(now, 'year')) {
+      return day.format('M月D日');
+    } else {
+      return day.format('YYYY年M月D日');
+    }
   }
 
   create() {
@@ -74,10 +106,14 @@ export default class Statistics extends Vue {
   type = '-';
   interval = 'day';
   typeList = recordTypeList;
-  intervalList = intervalList;
 }
+
 </script>
 <style lang="scss" scoped>
+.noRecord{
+  color: #777777;
+
+}
 %item {
   padding: 8px 16px;
   line-height: 24px;
@@ -94,17 +130,19 @@ export default class Statistics extends Vue {
   background: white;
   @extend %item;
 }
-.notes{
+
+.notes {
   margin-right: auto;
   margin-left: 16px;
   color: #999999;
 }
+
 ::v-deep {
   .type-tabs-item {
-    background: white;
+    background: #c4c4c4;
 
     &.selected {
-      background: #c4c4c4;
+      background: white;
 
       &::after {
         display: none;

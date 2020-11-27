@@ -23,10 +23,15 @@ const store = new Vuex.Store({
           return state.recordList
         },
         createRecordList(state,record: RecordItem) {
+      if(!state.tagList||state.tagList.length === 0){
+        store.commit('createTag','衣')
+        store.commit('createTag','食')
+        store.commit('createTag','住')
+        store.commit('createTag','行')
+      }
           const record2:RecordItem = clone(record)
           record2.creatAt = new Date().toISOString();
           state.recordList.push(record2);
-          console.log(state.recordList);
           store.commit('saveRecords')
         },
       setCurrentTag(state,id:string){
@@ -43,14 +48,10 @@ const store = new Vuex.Store({
       const names = state.tagList.map(item => item.name);
       if (names.indexOf(name) >= 0) {
         alert('重复了！')
-        return 'fail';
-
       }
       const id = createId().toString();
       state.tagList.push({id,name: name});
       store.commit('saveTags')
-      alert('添加成功！')
-      return 'success'
     },
     removeTag(state,id: string) {
       let index=-1
