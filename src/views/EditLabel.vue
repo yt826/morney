@@ -64,7 +64,7 @@ export default class EditLabel extends Vue {
         }
         const massage = this.$store.state.updateTagError
         if(massage === 'success'){
-          alert('创建成功！')
+          alert('修改成功！')
         }
         else if (massage ==='duplicated'){
           alert('标签名重复了！')
