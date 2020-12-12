@@ -22,4 +22,4 @@ git commit -m 'deploy'
 # 部署到 https://<USERNAME>.github.io/<REPO>
 git push -f git@gitee.com:tao726/morney-website.git master:gh-pages
 
-cd -
+cd -co

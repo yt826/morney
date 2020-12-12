@@ -27,6 +27,7 @@ import {Component} from 'vue-property-decorator';
 @Component
 export default class NumberPad extends Vue {
   output = '0';
+
   outputAdd(event: MouseEvent) {
     const button = (event.target as HTMLButtonElement);
     const input = button.textContent!;
@@ -57,11 +58,16 @@ export default class NumberPad extends Vue {
   }
 
   ok() {
-    const number = parseFloat(this.output)
-    this.$emit('update:value',number);
-    this.$emit('submit',number);
-    alert('创建成功！')
-    this.output = '0';
+    const number = parseFloat(this.output);
+    if (number === 0) {
+      alert('请输入金额！');
+    } else {
+      this.$emit('update:value', number);
+      this.$emit('submit', number);
+      alert('创建成功！');
+
+      this.output = '0';
+    }
   }
 }
 </script>
