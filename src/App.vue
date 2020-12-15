@@ -10,6 +10,7 @@
 body{
   line-height: 1.5;
   font-family: $font-hei;
+  background-color: rgb(211,211,211);
 
 }
 #app{

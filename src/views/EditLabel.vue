@@ -67,7 +67,7 @@ export default class EditLabel extends Vue {
           alert('修改成功！')
         }
         else if (massage ==='duplicated'){
-          alert('标签名重复了！')
+          alert('标签名重复了或为空！')
         }
     this.$router.back();
   }

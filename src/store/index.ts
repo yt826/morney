@@ -79,13 +79,15 @@ const store = new Vuex.Store({
       const idList = state.tagList.map(item => item.id);
       if (idList.indexOf(tag.id) >= 0) {
         const names = state.tagList.map(item => item.name);
-        if (names.indexOf(tag.name) >= 0) {
+        if (names.indexOf(tag.name) >= 0 || !tag.name) {
           state.updateTagError = 'duplicated'
         } else {
           const tag1 = state.tagList.filter(item => item.id === tag.id)[0];
+          if(tag.name){
           tag1.name = tag.name;
           store.commit('saveTags')
-          state.updateTagError ='success'
+          state.updateTagError ='success'}
+
         }
       }
     },
